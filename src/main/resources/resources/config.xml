@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+
+	<system>
+		<environment>local</environment>
+	</system>
+
+	<user>
+		<maxExp>1600</maxExp>
+		<level>5</level>
+	</user>
+
+</config>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="project" default="deploy">
+
+    <description>the build to deploy to server</description>
+
+    <target name="stopTomcat" description="To stop a tomcat server">
+		<!-- Stop Tomcat -->
+    	<sshexec
+    		host="172.0.0.1"
+    		username="id_tomcat"
+			keyfile="id_rsa"
+			trust="true"
+    		command="source ~/.bash_profile;/usr/local/tomcat/bin/shutdown.sh" />
+    </target>
+
+    <target name="sendWarFile" description="Send a war to a tomcat server">
+
+		<!-- Copy the ROOT.war to the server -->
+    	<scp
+    		file="target/ROOT.war"
+    		todir="id_tomcat@172.0.0.1:"
+			keyfile="id_rsa"
+    		verbose="true"
+    		passphrase="" trust="true"/>
+
+		<!-- Delete the ROOT Folder -->
+    	<sshexec
+    		host="172.0.0.1"
+    		username="id_tomcat"
+			keyfile="id_rsa"
+			trust="true"
+    		command="rm -rf /usr/local/tomcat/webapps/ROOT /usr/local/tomcat/webapps/ROOT.war" />
+
+		<!-- Move the ROOT.war to the Webapp Folder -->
+    	<sshexec
+    		host="172.0.0.1"
+    		username="id_tomcat"
+			keyfile="id_rsa"
+			trust="true"
+    		command="mv ROOT.war /usr/local/tomcat/webapps/" />
+
+    </target>
+
+    <target name="startTomcat" description="To start a tomcat server" depends="sendWarFile">
+    	<sshexec
+    		host="172.0.0.1"
+    		username="id_tomcat"
+			keyfile="id_rsa"
+			trust="true"
+    		command="source ~/.bash_profile;/usr/local/tomcat/bin/startup.sh" />
+    </target>
+
+    <target name="deploy" description="description">
+		<antcall target="stopTomcat"/>
+		<antcall target="startTomcat"/>
+    </target>
+
+</project>
