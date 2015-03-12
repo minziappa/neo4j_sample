@@ -3,8 +3,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
-	<display-name>sample web mvc</display-name>
-	<description>sample web mvc</description>
+	<display-name>neo web mvc</display-name>
+	<description>neo web mvc</description>
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
@@ -20,15 +20,15 @@
 	</listener>
 
 	<servlet>
-		<servlet-name>sample</servlet-name>
+		<servlet-name>neo</servlet-name>
 		<servlet-class>
 			org.springframework.web.servlet.DispatcherServlet
 		</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>sample</servlet-name>
-		<url-pattern>/sample/*</url-pattern>
+		<servlet-name>neo</servlet-name>
+		<url-pattern>/neo/*</url-pattern>
 	</servlet-mapping>
 
 	<filter>
@@ -45,7 +45,7 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>encodingFilter</filter-name>
-		<url-pattern>/sample/*</url-pattern>
+		<url-pattern>/neo/*</url-pattern>
 	</filter-mapping>
 
 	<error-page>

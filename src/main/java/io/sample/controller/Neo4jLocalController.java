@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @since   JDK1.6
  */
 @Controller
-@RequestMapping("/neo4j")
+// @RequestMapping("/neo4j")
 public class Neo4jLocalController extends AbstractBaseController {
 
 	private Logger logger = LoggerFactory.getLogger(Neo4jLocalController.class);
@@ -32,7 +32,7 @@ public class Neo4jLocalController extends AbstractBaseController {
 	@Autowired
     private LocalNeo4jService localNeo4jService;
 
-	@RequestMapping(value = {"index.neo"})
+	@RequestMapping(value = {"/", "", "index.neo"})
 	public String remote(ModelMap model) throws Exception {
 
 		//model.addAttribute("model", petaNeo4jModel);
