@@ -56,7 +56,10 @@ public class EmbeddedNeo4jWithIndexing
         {
             // Create users sub reference node
             Node usersReferenceNode = graphDb.createNode();
-            graphDb.getReferenceNode().createRelationshipTo(usersReferenceNode, RelTypes.USERS_REFERENCE );
+
+            // Edit - 2015-03-27
+            // graphDb.getReferenceNode().createRelationshipTo(usersReferenceNode, RelTypes.USERS_REFERENCE );
+
             // Create some users and index their names with the IndexService
             for ( int id = 0; id < 100; id++ )
             {
