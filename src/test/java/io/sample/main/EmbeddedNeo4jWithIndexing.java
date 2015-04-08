@@ -16,7 +16,9 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package io.sample;
+package io.sample.main;
+
+import io.sample.main.TestMain.TutorialRelationships;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -56,7 +58,7 @@ public class EmbeddedNeo4jWithIndexing
         {
             // Create users sub reference node
             Node usersReferenceNode = graphDb.createNode();
-            graphDb.getReferenceNode().createRelationshipTo(usersReferenceNode, RelTypes.USERS_REFERENCE );
+
             // Create some users and index their names with the IndexService
             for ( int id = 0; id < 100; id++ )
             {

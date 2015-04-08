@@ -26,6 +26,7 @@ public class LocalNeo4jServiceImpl implements LocalNeo4jService {
 	private Logger logger = LoggerFactory.getLogger(LocalNeo4jServiceImpl.class);
 	private static GraphDatabaseService graphDb;
 	private static Index<Node> nodeIndex;
+	private static String GRAPH_DB_PATH = "var/graphDb/local";
 
 	@Autowired
     private Configuration configuration;
@@ -36,14 +37,10 @@ public class LocalNeo4jServiceImpl implements LocalNeo4jService {
     	KNOWS
     }
 
-    public void LocalNeo4jServiceImpl() {
-    	graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( "var/graphDb" );
-    	// registerShutdownHook(graphDb);
-    }
-
 	public void setGraph(Neo4jLocalPara neo4jLocalPara) throws Exception {
 
-		GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( "var/graphDb" );
+		GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( GRAPH_DB_PATH );
+
 		try ( Transaction tx = graphDb.beginTx() ) {
 
 			nodeIndex = graphDb.index().forNodes( "nodes" );
@@ -71,7 +68,9 @@ public class LocalNeo4jServiceImpl implements LocalNeo4jService {
 	public String getGraph(Neo4jLocalPara neo4jLocalPara) throws Exception {
 
         try {
-        	graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( "var/graphDb" );
+        	GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( GRAPH_DB_PATH );
+
+        	nodeIndex = graphDb.index().forNodes( "nodes" );
         	
             // Find a user through the search index
             String indexValue = "World!";
@@ -89,6 +88,8 @@ public class LocalNeo4jServiceImpl implements LocalNeo4jService {
 
 	public void deleteGraph(Neo4jLocalPara neo4jLocalPara) throws Exception {
 
+		GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( GRAPH_DB_PATH );
+
 		try ( Transaction tx = graphDb.beginTx() ) {
 
             // Delete the persons and remove them from the index
@@ -105,6 +106,8 @@ public class LocalNeo4jServiceImpl implements LocalNeo4jService {
 	}
 
 	public static void cleanUp(final Index<Node> nodeIndex) {
+
+		GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( GRAPH_DB_PATH );
 
 		for (Node node : GlobalGraphOperations.at(graphDb).getAllNodes()) {
 			for (Relationship rel : node.getRelationships()) {
