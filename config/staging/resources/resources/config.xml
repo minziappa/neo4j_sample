@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+
+	<neo4j>
+		<server>http://172.0.0.1:7474/</server>
+	</neo4j>
+
+</config>
