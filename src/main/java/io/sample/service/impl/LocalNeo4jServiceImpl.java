@@ -5,7 +5,6 @@ import io.sample.service.LocalNeo4jService;
 
 import org.apache.commons.configuration.Configuration;
 
-import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
@@ -37,9 +36,14 @@ public class LocalNeo4jServiceImpl implements LocalNeo4jService {
     	KNOWS
     }
 
+
 	public void setGraph(Neo4jLocalPara neo4jLocalPara) throws Exception {
 
 		GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( GRAPH_DB_PATH );
+
+		graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( "var/graphDb" );
+		registerShutdownHook(graphDb);
+
 
 		try ( Transaction tx = graphDb.beginTx() ) {
 
@@ -68,10 +72,12 @@ public class LocalNeo4jServiceImpl implements LocalNeo4jService {
 	public String getGraph(Neo4jLocalPara neo4jLocalPara) throws Exception {
 
         try {
+
         	GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( GRAPH_DB_PATH );
+    		registerShutdownHook(graphDb);
 
         	nodeIndex = graphDb.index().forNodes( "nodes" );
-        	
+
             // Find a user through the search index
             String indexValue = "World!";
             Node foundUser = nodeIndex.get( "message_key", indexValue ).getSingle();
@@ -87,6 +93,8 @@ public class LocalNeo4jServiceImpl implements LocalNeo4jService {
 	}
 
 	public void deleteGraph(Neo4jLocalPara neo4jLocalPara) throws Exception {
+    	graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( "var/graphDb" );
+		registerShutdownHook(graphDb);
 
 		GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( GRAPH_DB_PATH );
 
