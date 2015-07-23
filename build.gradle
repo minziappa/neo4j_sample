@@ -22,7 +22,7 @@ configurations {
 	provided
 }
 
-String neo4jVersion = '2.2.0'
+String neo4jVersion = '2.2.1'
 
 dependencies {
 	compile 'commons-io:commons-io:2.3'
@@ -42,6 +42,8 @@ dependencies {
 	compile 'org.neo4j:neo4j:' + neo4jVersion
 	compile 'org.neo4j:neo4j-lucene-index:' + neo4jVersion
 	compile 'org.neo4j:neo4j-community:' + neo4jVersion
+	compile 'org.neo4j:neo4j-cypher:' + neo4jVersion
+	
 	compile 'com.sun.jersey:jersey-client:1.5'
 	compile 'org.springmodules:spring-modules-jakarta-commons:0.8'
 	compile 'org.freemarker:freemarker:2.3.17'
