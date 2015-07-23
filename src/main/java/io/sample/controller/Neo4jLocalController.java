@@ -23,21 +23,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @since   JDK1.6
  */
 @Controller
-// @RequestMapping("/neo4j")
+@RequestMapping("/local")
 public class Neo4jLocalController extends AbstractBaseController {
 
 	private Logger logger = LoggerFactory.getLogger(Neo4jLocalController.class);
 
-	/* The petaService is used for business Logic */
 	@Autowired
     private LocalNeo4jService localNeo4jService;
 
 	@RequestMapping(value = {"/", "", "index.neo"})
 	public String remote(ModelMap model) throws Exception {
 
-		//model.addAttribute("model", petaNeo4jModel);
-
-		return "neo4j/index";
+		return "local/index";
 	}
 
 	@RequestMapping(value = {"setLocal.neo"})
@@ -47,7 +44,7 @@ public class Neo4jLocalController extends AbstractBaseController {
 
 		model.addAttribute("model", petaNeo4jModel);
 
-		return "neo4j/setLocal";
+		return "local/setLocal";
 	}
 
 	@RequestMapping(value = {"setGraphLocal.neo"})
@@ -60,7 +57,7 @@ public class Neo4jLocalController extends AbstractBaseController {
 
 		model.addAttribute("model", neo4jModel);
 
-		return "neo4j/setGraphLocal";
+		return "local/setGraphLocal";
 	}
 
 	@RequestMapping(value = {"getLocal.neo"})
@@ -70,7 +67,7 @@ public class Neo4jLocalController extends AbstractBaseController {
 
 		model.addAttribute("model", petaNeo4jModel);
 
-		return "neo4j/getLocal";
+		return "local/getLocal";
 	}
 
 	@RequestMapping(value = {"getGraphLocal.neo"})
@@ -78,12 +75,12 @@ public class Neo4jLocalController extends AbstractBaseController {
 			BindingResult bindingResult, ModelMap model) throws Exception {
 
 		Neo4jModel neo4jModel = new Neo4jModel();
-		String strReturn = localNeo4jService.getGraph(neo4jLocalPara);
+		String strReturn = localNeo4jService.getGraph2(neo4jLocalPara);
 		neo4jModel.setValue(strReturn);
 
 		model.addAttribute("model", neo4jModel);
 
-		return "neo4j/getGraphLocal";
+		return "local/getGraphLocal";
 	}
 
 	@RequestMapping(value = {"deleteLocal.neo"})
@@ -94,7 +91,7 @@ public class Neo4jLocalController extends AbstractBaseController {
 
 		model.addAttribute("model", neo4jModel);
 
-		return "neo4j/deleteLocal";
+		return "local/deleteLocal";
 	}
 
 	@RequestMapping(value = {"deleteGraphLocal.neo"})
@@ -106,7 +103,7 @@ public class Neo4jLocalController extends AbstractBaseController {
 
 		model.addAttribute("model", neo4jModel);
 
-		return "neo4j/deleteGraphLocal";
+		return "local/deleteGraphLocal";
 	}
 
 }

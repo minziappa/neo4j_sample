@@ -22,7 +22,8 @@ configurations {
 	provided
 }
 
-String neo4jVersion = '2.2.1'
+String springVersion = '4.1.7.RELEASE'
+String neo4jVersion = '2.2.3'
 
 dependencies {
 	compile 'commons-io:commons-io:2.3'
@@ -31,19 +32,20 @@ dependencies {
 	runtime 'org.slf4j:jcl-over-slf4j:1.7.5'
 	compile 'ch.qos.logback:logback-core:1.0.13'
 	compile 'ch.qos.logback:logback-classic:1.0.13'
-    compile 'org.springframework:spring-core:3.1.4.RELEASE'
-	compile 'org.springframework:spring-aop:3.1.4.RELEASE'
-	compile 'org.springframework:spring-beans:3.1.4.RELEASE'
-	compile 'org.springframework:spring-web:3.1.4.RELEASE'
-	compile 'org.springframework:spring-webmvc:3.1.4.RELEASE'
-	compile 'org.springframework:spring-orm:3.1.4.RELEASE'
+    compile 'org.springframework:spring-core:' + springVersion
+	compile 'org.springframework:spring-aop:' + springVersion
+	compile 'org.springframework:spring-beans:' + springVersion
+	compile 'org.springframework:spring-web:' + springVersion
+	compile 'org.springframework:spring-webmvc:' + springVersion
+	compile 'org.springframework:spring-orm:' + springVersion
 	compile 'org.apache.camel:camel-spring:2.8.6'
 	compile 'org.neo4j:neo4j-kernel:' + neo4jVersion
 	compile 'org.neo4j:neo4j:' + neo4jVersion
+	compile 'org.neo4j:neo4j-io:' + neo4jVersion
 	compile 'org.neo4j:neo4j-lucene-index:' + neo4jVersion
 	compile 'org.neo4j:neo4j-community:' + neo4jVersion
 	compile 'org.neo4j:neo4j-cypher:' + neo4jVersion
-	
+	compile 'org.neo4j:neo4j-graph-matching:' + neo4jVersion
 	compile 'com.sun.jersey:jersey-client:1.5'
 	compile 'org.springmodules:spring-modules-jakarta-commons:0.8'
 	compile 'org.freemarker:freemarker:2.3.17'

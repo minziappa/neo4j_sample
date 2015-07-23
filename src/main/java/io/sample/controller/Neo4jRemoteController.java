@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @since   JDK1.7
  */
 @Controller
-@RequestMapping("/neo4j")
+@RequestMapping("/remote")
 public class Neo4jRemoteController extends AbstractBaseController {
 
 	private Logger logger = LoggerFactory.getLogger(Neo4jRemoteController.class);
@@ -38,7 +38,7 @@ public class Neo4jRemoteController extends AbstractBaseController {
 
 		//model.addAttribute("model", petaNeo4jModel);
 
-		return "neo4j/ok";
+		return "remote/ok";
 	}
 
 	@RequestMapping(value = {"addingProperties.neo"})
@@ -48,7 +48,7 @@ public class Neo4jRemoteController extends AbstractBaseController {
 
 		//model.addAttribute("model", petaNeo4jModel);
 
-		return "neo4j/ok";
+		return "remote/ok";
 	}
 
 	@RequestMapping(value = {"addingRelations.neo"})
@@ -56,13 +56,13 @@ public class Neo4jRemoteController extends AbstractBaseController {
 
 		// neo4jService.addingProperties(strUrl2);
 
-		return "neo4j/ok";
+		return "remote/ok";
 	}
 
 	@RequestMapping(value = {"addPropertiesToARelation.neo"})
 	public String addPropertiesToARelation(ModelMap model) throws Exception {
 
-		return "neo4j/ok";
+		return "remote/ok";
 	}
 
 	@RequestMapping(value = {"resultRemote.neo"})
@@ -75,7 +75,7 @@ public class Neo4jRemoteController extends AbstractBaseController {
 		model.addAttribute("errorMessage", strReturn);
 		model.addAttribute("model", neo4jModel);
 
-		return "neo4j/resultRemote";
+		return "remote/resultRemote";
 	}
 
 }
