@@ -1,120 +1,54 @@
 package io.sample.service.impl;
 
+import io.sample.bean.para.Neo4jLocalPara;
+import io.sample.service.LocalNeo4jService;
+
 import java.io.File;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import io.sample.bean.para.Neo4jLocalPara;
-import io.sample.service.LocalNeo4jService;
-
 import org.apache.commons.configuration.Configuration;
-
-import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.index.Index;
+import org.neo4j.graphdb.index.IndexHits;
 import org.neo4j.io.fs.FileUtils;
 import org.neo4j.tooling.GlobalGraphOperations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 
 @Service
-public class LocalNeo4jServiceImpl implements LocalNeo4jService {
+public class LocalNeo4jServiceImpl extends LocalNeo4jAbstract implements LocalNeo4jService {
 
 	private Logger logger = LoggerFactory.getLogger(LocalNeo4jServiceImpl.class);
-	private static Index<Node> nodeIndex;
-	private static String GRAPH_DB_PATH = "var/graphDb/local";
-
-	public String greeting;
-
-    // START SNIPPET: vars
-    GraphDatabaseService graphDb;
-    Node firstNode;
-    Node secondNode;
-    Relationship relationship;
-    // END SNIPPET: vars
 
 	@Autowired
     private Configuration configuration;
 
-    // START SNIPPET: createRelTypes
-    private static enum RelTypes implements RelationshipType
-    {
-    	KNOWS
+    public LocalNeo4jServiceImpl() {
+    	super();
     }
 
-
-	@Override
-	public void createDb() throws Exception {
-
-        // START SNIPPET: startDb
-        graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( GRAPH_DB_PATH );
-        registerShutdownHook( graphDb );
-        // END SNIPPET: startDb
-
-        // START SNIPPET: transaction
-        try ( Transaction tx = graphDb.beginTx() ) {
-            // Database operations go here
-            // END SNIPPET: transaction
-            // START SNIPPET: addData
-            firstNode = graphDb.createNode();
-            firstNode.setProperty( "message", "Hello, " );
-            secondNode = graphDb.createNode();
-            secondNode.setProperty( "message", "World!" );
-
-            relationship = firstNode.createRelationshipTo( secondNode, RelTypes.KNOWS );
-            relationship.setProperty( "message", "brave Neo4j " );
-            // END SNIPPET: addData
-
-            // START SNIPPET: readData
-            System.out.print( firstNode.getProperty( "message" ) );
-            System.out.print( relationship.getProperty( "message" ) );
-            System.out.print( secondNode.getProperty( "message" ) );
-            // END SNIPPET: readData
-
-            greeting = ( (String) firstNode.getProperty( "message" ) )
-                       + ( (String) relationship.getProperty( "message" ) )
-                       + ( (String) secondNode.getProperty( "message" ) );
-
-            // START SNIPPET: transaction
-            tx.success();
-        }
-
-	}
-
-	@Override
-	public void deleteDb() throws Exception {
-        FileUtils.deleteRecursively( new File( GRAPH_DB_PATH ) );
-	}
-
-	public void setGraph(Neo4jLocalPara neo4jLocalPara) throws Exception {
-
-		graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( GRAPH_DB_PATH );
-
-		registerShutdownHook(graphDb);
+	public boolean setGraph(Neo4jLocalPara neo4jLocalPara) throws Exception {
 
 		try ( Transaction tx = graphDb.beginTx() ) {
 
 			nodeIndex = graphDb.index().forNodes( "nodes" );
 
 			Node firstNode = graphDb.createNode();
-			firstNode.setProperty( "message_key", "Hello, " );
-	        nodeIndex.add( firstNode, "message_key", "Hello, " );
+			firstNode.setProperty( neo4jLocalPara.getFirstNodeKey(), neo4jLocalPara.getFirstNodeValue() );
+	        nodeIndex.add( firstNode, neo4jLocalPara.getFirstNodeKey(), neo4jLocalPara.getFirstNodeValue() );
 
 			Node secondNode = graphDb.createNode();
-			secondNode.setProperty( "message_key", "World!" );
-	        nodeIndex.add( secondNode, "message_key", "World!" );
+			secondNode.setProperty( neo4jLocalPara.getSecondNodeKey(), neo4jLocalPara.getSecondNodeValue() );
+	        nodeIndex.add( secondNode, neo4jLocalPara.getSecondNodeValue(), neo4jLocalPara.getSecondNodeValue() );
 
 			Relationship relationship = firstNode.createRelationshipTo( secondNode, RelTypes.KNOWS );
-			relationship.setProperty( "message_key", "brave Neo4j " );
+			relationship.setProperty( neo4jLocalPara.getRelationshopKey(), neo4jLocalPara.getRelationshopValue() );
 
 			logger.info("success - create node");
 		    // Database operations go here
@@ -122,32 +56,33 @@ public class LocalNeo4jServiceImpl implements LocalNeo4jService {
         } finally {
             ;
         }
+		
+		return true;
 	}
 
 	public String getGraph(Neo4jLocalPara neo4jLocalPara) throws Exception {
-		logger.info(" get - 1");
-    	graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( GRAPH_DB_PATH );
-		registerShutdownHook(graphDb);
 
-		logger.info(" get - 2");
+		String value = null;
+		
+		try ( Transaction tx = graphDb.beginTx() ){
+			nodeIndex = graphDb.index().forNodes( "nodes" );
+	        // Find a user through the search index
+	        IndexHits<Node> indexHits = nodeIndex.get( neo4jLocalPara.getFirstNodeKey(), neo4jLocalPara.getFirstNodeValue() );
+	        while(indexHits.hasNext()) {
+	        	Node nodeHit = indexHits.next();
 
-    	nodeIndex = graphDb.index().forNodes( "nodes" );
-    	logger.info(" get - 3");
-        // Find a user through the search index
-        String indexValue = "World!";
-        Node foundUser = nodeIndex.get( "message_key", indexValue ).getSingle();
+	        	value = (String)nodeHit.getProperty(neo4jLocalPara.getFirstNodeKey());
 
-        logger.info( "index value is " + indexValue);
-        logger.info( "value is " +foundUser.getProperty( "message_key" ) );
-        logger.info(" get - 4");	
+	        	logger.info((String)nodeHit.getProperty(neo4jLocalPara.getFirstNodeKey()));
+	        }
 
-        return "";
+	        logger.info( "index value is " + neo4jLocalPara.getFirstNodeValue());
+		}
+
+        return value;
 	}
 
 	public String getGraph2(Neo4jLocalPara neo4jLocalPara) throws Exception {
-		logger.info(" get - 1");
-    	graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( GRAPH_DB_PATH );
-		registerShutdownHook(graphDb);
 
 		String rows = "";
 		try ( Transaction ignored = graphDb.beginTx(); 
@@ -163,33 +98,50 @@ public class LocalNeo4jServiceImpl implements LocalNeo4jService {
 			    }
 			}
 		logger.info(">>>" + rows);
-        return "";
+        return rows;
 	}
 
-	public void deleteGraph(Neo4jLocalPara neo4jLocalPara) throws Exception {
-//    	graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( "var/graphDb" );
-//		registerShutdownHook(graphDb);
-
-		graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( GRAPH_DB_PATH );
+	public boolean deleteGraph(Neo4jLocalPara neo4jLocalPara) throws Exception {
 
 		try ( Transaction tx = graphDb.beginTx() ) {
 
-//            // Delete the persons and remove them from the index
-//            for ( Node user : nodeIndex.query( "message_key", "*" ) ) {
-//                nodeIndex.remove(user, "message_key", user.getProperty( "message_key" ) );
-//                user.delete();
-//            }
+            // Delete the persons and remove them from the index
+            for ( Node user : nodeIndex.query( neo4jLocalPara.getFirstNodeKey(), "*" ) ) {
+                nodeIndex.remove(user, neo4jLocalPara.getFirstNodeKey(), user.getProperty( neo4jLocalPara.getFirstNodeKey() ) );
+                user.delete();
+            }
 
             tx.success();
         } finally {
         	;
         }
 
+		return true;
 	}
 
-	public void cleanUp(final Index<Node> nodeIndex) {
+	public boolean deleteGraph2(Neo4jLocalPara neo4jLocalPara) throws Exception {
 
-		graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( GRAPH_DB_PATH );
+        try ( Transaction tx = graphDb.beginTx() ){
+
+        	nodeIndex = graphDb.index().forNodes( "nodes" );
+        	IndexHits<Node> indexHits = nodeIndex.get(neo4jLocalPara.getFirstNodeKey(), neo4jLocalPara.getFirstNodeValue());
+
+        	if (indexHits.getSingle() == null) {
+        		return false;
+        	}
+
+            // let's remove the data
+            // firstNode.getSingleRelationship( RelTypes.KNOWS, Direction.OUTGOING ).delete();
+            // firstNode.delete();
+            // secondNode.delete();
+
+            tx.success();
+        }
+        
+        return true;
+    }
+
+	public boolean cleanUp(final Index<Node> nodeIndex) throws Exception {
 
 		for (Node node : GlobalGraphOperations.at(graphDb).getAllNodes()) {
 			for (Relationship rel : node.getRelationships()) {
@@ -198,45 +150,13 @@ public class LocalNeo4jServiceImpl implements LocalNeo4jService {
 			nodeIndex.remove(node);
 			node.delete();
 		}
- 
+
+		return true;
 	}
 
-	public void removeData() {
-	graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( GRAPH_DB_PATH );
-
-        try ( Transaction tx = graphDb.beginTx() ){
-            // START SNIPPET: removingData
-            // let's remove the data
-            firstNode.getSingleRelationship( RelTypes.KNOWS, Direction.OUTGOING ).delete();
-            firstNode.delete();
-            secondNode.delete();
-            // END SNIPPET: removingData
-
-            tx.success();
-        }
-    }
-
-    // START SNIPPET: shutdownHook
-    private static void registerShutdownHook( final GraphDatabaseService graphDb )
-    {
-        // Registers a shutdown hook for the Neo4j instance so that it
-        // shuts down nicely when the VM exits (even if you "Ctrl-C" the
-        // running application).
-        Runtime.getRuntime().addShutdownHook( new Thread() {
-            @Override
-            public void run() {
-                graphDb.shutdown();
-            }
-        });
-    }
-    // END SNIPPET: shutdownHook
-
-	public void shutdown() throws Exception {
-		System.out.println();
-        System.out.println( "Shutting down database ..." );
-		if(graphDb != null) {
-			graphDb.shutdown();		
-		}
+	@Override
+	public void deleteDb() throws Exception {
+        FileUtils.deleteRecursively( new File( GRAPH_DB_PATH ) );
 	}
 
 }

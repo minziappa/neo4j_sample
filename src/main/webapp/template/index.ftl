@@ -7,33 +7,19 @@
 
 </head>
 <body>
-<h1>Link list</h1>
+<h1>Neo4J Sample</h1>
 <br/>
 
 <table border="1">
 	<tr>
-		<th>test1</th>
+		<th>Local Neo4j</th>
+		<th><a href="local/" >Going to index</a></th>
+	</tr>
+	<tr>
+		<th>Remote Neo4j</th>
+		<th>Going to index</th>
 	</tr>
 </table>
-
-<form action="inputTestTbl.neo" method="post">
-
-	<table border = "1">
-	<tr>
-		<td>
-			<ul>
-			<li>Number:<input type="text" name="testNum" value="" maxlength="8" size="16"/></li>
-			<li>Name:<input type="text" name="testName" value="" maxlength="8" size="16"/></li>
-			</ul>
-		</td>
-	</tr>
-	</table>
-
-	<br/>
-
-	<input type="submit" value="Send" />
-
-</form>
-
+<a href="deleteDb.neo" >Delete Db</a>
 </body>
 </html>

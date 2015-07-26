@@ -1,8 +1,5 @@
 package io.sample.main;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.neo4j.cypher.ExecutionEngine;
 import org.neo4j.cypher.ExecutionResult;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -30,6 +27,7 @@ public class TestCypherMain {
 
 		String rows = "";
 
+		
 //		try ( Transaction ignored = graphDb.beginTx();
 //			      Result result = graphDb.execute( "match (n {name: 'my node'}) return n, n.name" ) )
 //			{

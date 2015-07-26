@@ -4,10 +4,6 @@ public class CommonBean {
 
 	private int nodeId;
 
-	private String nodeKey = null;
-
-	private String nodeValue = null;
-
 	private String relationshopKey = null;
 
 	private String relationshopValue = null;
@@ -18,22 +14,6 @@ public class CommonBean {
 
 	public void setNodeId(int nodeId) {
 		this.nodeId = nodeId;
-	}
-
-	public String getNodeKey() {
-		return nodeKey;
-	}
-
-	public void setNodeKey(String nodeKey) {
-		this.nodeKey = nodeKey;
-	}
-
-	public String getNodeValue() {
-		return nodeValue;
-	}
-
-	public void setNodeValue(String nodeValue) {
-		this.nodeValue = nodeValue;
 	}
 
 	public String getRelationshopKey() {

@@ -10,18 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-/**
- * the <code>InviteController</code> class represents action controller.
- * Show target user's list.
- * 
- * @author  kim woong-joon
- * @version 1.21, 10/12/14
- * @since   JDK1.6
- */
 @Controller
 @RequestMapping("/local")
 public class Neo4jLocalController extends AbstractBaseController {
@@ -32,24 +24,24 @@ public class Neo4jLocalController extends AbstractBaseController {
     private LocalNeo4jService localNeo4jService;
 
 	@RequestMapping(value = {"/", "", "index.neo"})
-	public String remote(ModelMap model) throws Exception {
+	public String index(ModelMap model) throws Exception {
 
 		return "local/index";
 	}
 
-	@RequestMapping(value = {"setLocal.neo"})
-	public String setLocal(ModelMap model) throws Exception {
+	@RequestMapping(value = {"setData.neo"})
+	public String setData(@RequestParam("type") String type, ModelMap model) throws Exception {
 
 		Neo4jModel petaNeo4jModel = new Neo4jModel();
 
 		model.addAttribute("model", petaNeo4jModel);
 
-		return "local/setLocal";
+		return "local/setData";
 	}
 
-	@RequestMapping(value = {"setGraphLocal.neo"})
-	public String setGraphLocal(@ModelAttribute("Neo4jLocalPara")Neo4jLocalPara neo4jLocalPara, 
-			BindingResult bindingResult, ModelMap model) throws Exception {
+	@RequestMapping(value = {"setDataComplete.neo"})
+	public String setDataComplete(@ModelAttribute("Neo4jLocalPara")Neo4jLocalPara neo4jLocalPara, 
+			@RequestParam("type") String type, BindingResult bindingResult, ModelMap model) throws Exception {
 
 		Neo4jModel neo4jModel = new Neo4jModel();
 
@@ -57,53 +49,52 @@ public class Neo4jLocalController extends AbstractBaseController {
 
 		model.addAttribute("model", neo4jModel);
 
-		return "local/setGraphLocal";
+		return "local/setDataComplete";
 	}
 
-	@RequestMapping(value = {"getLocal.neo"})
-	public String getLocal(ModelMap model) throws Exception {
+	@RequestMapping(value = {"getData.neo"})
+	public String getData(@RequestParam("type") String type, ModelMap model) throws Exception {
 
 		Neo4jModel petaNeo4jModel = new Neo4jModel();
 
 		model.addAttribute("model", petaNeo4jModel);
 
-		return "local/getLocal";
+		return "local/getData";
 	}
 
-	@RequestMapping(value = {"getGraphLocal.neo"})
-	public String getGraphLocal(@ModelAttribute("Neo4jLocalPara")Neo4jLocalPara neo4jLocalPara, 
-			BindingResult bindingResult, ModelMap model) throws Exception {
+	@RequestMapping(value = {"getDataComplete.neo"})
+	public String getDataComplete(@ModelAttribute("Neo4jLocalPara")Neo4jLocalPara neo4jLocalPara, 
+			@RequestParam("type") String type, BindingResult bindingResult, ModelMap model) throws Exception {
 
 		Neo4jModel neo4jModel = new Neo4jModel();
-		String strReturn = localNeo4jService.getGraph2(neo4jLocalPara);
+		String strReturn = localNeo4jService.getGraph(neo4jLocalPara);
 		neo4jModel.setValue(strReturn);
 
 		model.addAttribute("model", neo4jModel);
 
-		return "local/getGraphLocal";
+		return "local/getDataComplete";
 	}
 
-	@RequestMapping(value = {"deleteLocal.neo"})
-	public String deleteLocal(@ModelAttribute("Neo4jLocalPara")Neo4jLocalPara neo4jLocalPara, 
-			BindingResult bindingResult, ModelMap model) throws Exception {
+	@RequestMapping(value = {"deleteData.neo"})
+	public String deleteData(@RequestParam("type") String type, ModelMap model) throws Exception {
 
 		Neo4jModel neo4jModel = new Neo4jModel();
 
 		model.addAttribute("model", neo4jModel);
 
-		return "local/deleteLocal";
+		return "local/deleteData";
 	}
 
-	@RequestMapping(value = {"deleteGraphLocal.neo"})
-	public String deleteGraphLocal(@ModelAttribute("Neo4jLocalPara")Neo4jLocalPara neo4jLocalPara, 
-			BindingResult bindingResult, ModelMap model) throws Exception {
+	@RequestMapping(value = {"deleteDataComplete.neo"})
+	public String deleteDataComplete(@ModelAttribute("Neo4jLocalPara")Neo4jLocalPara neo4jLocalPara, 
+			@RequestParam("type") String type, BindingResult bindingResult, ModelMap model) throws Exception {
 
 		Neo4jModel neo4jModel = new Neo4jModel();
 		localNeo4jService.deleteGraph(neo4jLocalPara);
 
 		model.addAttribute("model", neo4jModel);
 
-		return "local/deleteGraphLocal";
+		return "local/deleteDataComplete";
 	}
 
 }

@@ -41,8 +41,10 @@ public class TestUpdateMain {
 //		    for ( Node node : loop(graphDb.findNodes(label, "username", nameToFind))) {
 //		        node.setProperty( "username", "user" + ( idToFind + 1 ) + "@neo4j.org" );
 //		    }
+
 		    tx.success();
 		}
+		System.out.println("test >>>> ");
 	}
 
 }

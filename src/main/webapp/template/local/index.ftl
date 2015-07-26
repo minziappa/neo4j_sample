@@ -15,7 +15,7 @@
 	<tr>
 		<td>
 			<label>
-				<a href="setLocal.neo" >1. setLocal </a>
+				<a href="setData.neo?type=1" >1. setData 1</a>
 			</label>
 		</td>
 	</tr>
@@ -23,7 +23,7 @@
 	<tr>
 		<td>
 			<label>
-				<a href="getLocal.neo" >2. getLocal </a>
+				<a href="getData.neo?type=1" >2. getData 1</a>
 			</label>
 		</td>
 	</tr>
@@ -31,7 +31,7 @@
 	<tr>
 		<td>
 			<label>
-				<a href="deleteLocal.neo" >4. deleteGraphLocal </a>
+				<a href="deleteData.neo?type=2" >5. deleteData </a>
 			</label>
 		</td>
 	</tr>
